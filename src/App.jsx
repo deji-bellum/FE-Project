@@ -1,23 +1,25 @@
 import { Center, VStack } from "@chakra-ui/react";
-// This is the new component we built together!
 import { BellumText } from "./library/essential-components/BellumText";
+import { BellumIcon } from "./library/essential-components/BellumIcon";
+// Import whichever icons you want to use here
+import { Ghost, Flame } from "lucide-react";
 
 function App() {
   return (
     <Center h="100vh">
       <VStack gap="6">
-        {/* We are now using your custom 'type' logic */}
+        <BellumIcon icon={Ghost} color="purple" size={60} />
+        
         <BellumText type="h1" color="teal">
           Bellum Project
         </BellumText>
         
-        <BellumText type="body1">
-          The wrapper approach is officially working.
-        </BellumText>
-        
-        <BellumText type="body2" color="gray.500">
-          This is a smaller Body 2 text.
-        </BellumText>
+        <VStack gap="1">
+          <BellumIcon icon={Flame} color="orange" size={24} />
+          <BellumText type="body1">
+            Pass-through icons are working!
+          </BellumText>
+        </VStack>
       </VStack>
     </Center>
   );
