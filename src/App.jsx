@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Center, VStack, HStack, Box, Button } from "@chakra-ui/react";
+import { Center, VStack, HStack, Box } from "@chakra-ui/react";
 import { BellumText } from "./library/essential-components/BellumText";
 import { BellumIcon } from "./library/essential-components/BellumIcon";
 import { BellumSlider } from "./library/essential-components/BellumSlider";
@@ -9,57 +9,55 @@ import { BellumStepIndicator } from "./library/essential-components/BellumStepIn
 import { BellumDropdown } from "./library/essential-components/BellumDropdown";
 import { BellumLine } from "./library/essential-components/BellumLine";
 import { BellumRadioButton } from "./library/essential-components/BellumRadioButton";
-import { Ghost, Settings, Calendar as CalendarIcon, User, ChevronRight, Bell } from "lucide-react";
+import { BellumButton } from "./library/essential-components/BellumButton"; // New Import
+import { Ghost, Settings, Calendar as CalendarIcon, User, ChevronRight, Bell, RotateCcw } from "lucide-react";
 
 function App() {
-  // --- State Management ---
   const [volume, setVolume] = useState(50);
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [category, setCategory] = useState(["personal"]); 
-  const [notifyMethod, setNotifyMethod] = useState("email"); // Radio state
+  const [notifyMethod, setNotifyMethod] = useState("email");
 
-  const totalSteps = 4;
-
-  const categoryOptions = [
-    { label: "Personal", value: "personal" },
-    { label: "Work", value: "work" },
-    { label: "Urgent", value: "urgent" },
-  ];
-
-  const radioOptions = [
-    { label: "Email", value: "email" },
-    { label: "SMS", value: "sms" },
-  ];
-
-  // --- Logic ---
   const handleNextStep = () => {
-    if (activeStep < totalSteps - 1) setActiveStep(activeStep + 1);
+    if (activeStep < 3) setActiveStep(activeStep + 1);
+  };
+
+  const handleReset = () => {
+    setName("");
+    setVolume(50);
+    setActiveStep(0);
+    setDate("");
   };
 
   return (
     <Center p="10" minH="100vh" bg="gray.50">
-      <VStack gap="8" width="450px" bg="white" p="8" borderRadius="xl" shadow="md">
+      <VStack gap="8" width="450px" bg="white" p="8" borderRadius="2xl" shadow="xl">
         
-        {/* 1. Progress */}
         <Box width="100%">
-          <BellumStepIndicator totalSteps={totalSteps} currentStep={activeStep} />
+          <BellumStepIndicator totalSteps={4} currentStep={activeStep} />
         </Box>
 
-        {/* 2. Header */}
         <VStack gap="2">
-          <BellumIcon icon={Ghost} color="purple" size={60} />
+          <BellumIcon icon={Ghost} color="purple" size={50} />
           <BellumText type="h1">Bellum Dashboard</BellumText>
         </VStack>
 
         <BellumLine thickness={2} />
 
-        {/* 3. Profile Setup */}
         <Box width="100%">
-          <HStack gap="2" mb="4">
-            <BellumIcon icon={User} size={20} />
-            <BellumText type="h2">Profile Setup</BellumText>
+          <HStack justify="space-between" mb="4">
+            <HStack gap="2">
+              <BellumIcon icon={User} size={20} />
+              <BellumText type="h2">Profile</BellumText>
+            </HStack>
+            <BellumButton 
+              variant="Secondary" 
+              size="Small" 
+              content={<HStack gap="1"><RotateCcw size={14}/> Reset</HStack>}
+              onClick={handleReset}
+            />
           </HStack>
           
           <VStack gap="4" align="stretch">
@@ -68,70 +66,41 @@ function App() {
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              helperText={name ? `Welcome, ${name}!` : "Required to continue."}
             />
             <BellumDropdown 
-              label="Account Category"
-              options={categoryOptions}
+              label="Category"
+              options={[{label: "Work", value: "work"}, {label: "Personal", value: "personal"}]}
               value={category}
-              onValueChange={(details) => setCategory(details.value)}
-              placeholder="Choose a category"
+              onValueChange={(d) => setCategory(d.value)}
             />
           </VStack>
         </Box>
 
         <BellumLine thickness={1} />
 
-        {/* 4. Notification Preferences (Radio Buttons) */}
         <Box width="100%">
           <HStack gap="2" mb="3">
             <BellumIcon icon={Bell} size={20} />
             <BellumText type="h2">Notifications</BellumText>
           </HStack>
           <BellumRadioButton 
-            options={radioOptions}
+            options={[{label: "Email", value: "email"}, {label: "SMS", value: "sms"}]}
             value={notifyMethod}
-            onValueChange={(details) => setNotifyMethod(details.value)}
+            onValueChange={(d) => setNotifyMethod(d.value)}
             orientation="horizontal"
           />
         </Box>
 
         <BellumLine thickness={1} />
 
-        {/* 5. Volume Control */}
-        <Box width="100%">
-          <VStack gap="3" align="stretch">
-            <HStack justify="space-between">
-               <BellumText type="body2">System Volume</BellumText>
-               <BellumText type="body2" color="#003DAC">{volume}%</BellumText>
-            </HStack>
-            <BellumSlider value={volume} onChange={(val) => setVolume(val)} color="purple" />
-          </VStack>
-        </Box>
-
-        <BellumLine thickness={1} />
-
-        {/* 6. Calendar Section */}
-        <VStack gap="4" width="100%">
-          <HStack gap="2" width="100%">
-            <BellumIcon icon={CalendarIcon} size={20} />
-            <BellumText type="h2">Schedule Event</BellumText>
-          </HStack>
-          <BellumCalendar value={date} onValueChange={(details) => setDate(details.value[0])} />
-        </VStack>
-
-        {/* 7. Action Button */}
-        <Button 
-          bg="#003DAC" 
-          color="white"
-          _hover={{ bg: "#002a7a" }}
-          width="full" 
-          py="6"
-          onClick={handleNextStep}
+        <BellumButton 
+          variant="Primary" 
+          size="Large" 
+          width="full"
+          content={activeStep === 3 ? "Complete Setup" : "Continue to Next Step"}
           disabled={!name}
-        >
-          Continue to Step {activeStep + 2} <ChevronRight size={18} />
-        </Button>
+          onClick={handleNextStep}
+        />
 
         <BellumIcon icon={Settings} color="gray" size={24} />
       </VStack>
