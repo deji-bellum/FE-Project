@@ -9,8 +9,12 @@ import { BellumStepIndicator } from "./library/essential-components/BellumStepIn
 import { BellumDropdown } from "./library/essential-components/BellumDropdown";
 import { BellumLine } from "./library/essential-components/BellumLine";
 import { BellumRadioButton } from "./library/essential-components/BellumRadioButton";
-import { BellumButton } from "./library/essential-components/BellumButton"; // New Import
-import { Ghost, Settings, Calendar as CalendarIcon, User, ChevronRight, Bell, RotateCcw } from "lucide-react";
+import { BellumButton } from "./library/essential-components/BellumButton";
+
+// Import your new Existential Component
+import { BellumFileBox } from "./existential/non-pages/BellumFileBox"; 
+
+import { Ghost, Settings, Calendar as CalendarIcon, User, ChevronRight, Bell, FolderOpen } from "lucide-react";
 
 function App() {
   const [volume, setVolume] = useState(50);
@@ -24,16 +28,9 @@ function App() {
     if (activeStep < 3) setActiveStep(activeStep + 1);
   };
 
-  const handleReset = () => {
-    setName("");
-    setVolume(50);
-    setActiveStep(0);
-    setDate("");
-  };
-
   return (
     <Center p="10" minH="100vh" bg="gray.50">
-      <VStack gap="8" width="450px" bg="white" p="8" borderRadius="2xl" shadow="xl">
+      <VStack gap="8" width="500px" bg="white" p="8" borderRadius="2xl" shadow="xl">
         
         <Box width="100%">
           <BellumStepIndicator totalSteps={4} currentStep={activeStep} />
@@ -46,18 +43,29 @@ function App() {
 
         <BellumLine thickness={2} />
 
+        {/* --- NEW SECTION: File Box --- */}
         <Box width="100%">
-          <HStack justify="space-between" mb="4">
-            <HStack gap="2">
-              <BellumIcon icon={User} size={20} />
-              <BellumText type="h2">Profile</BellumText>
-            </HStack>
-            <BellumButton 
-              variant="Secondary" 
-              size="Small" 
-              content={<HStack gap="1"><RotateCcw size={14}/> Reset</HStack>}
-              onClick={handleReset}
+          <HStack gap="2" mb="4">
+            <BellumIcon icon={FolderOpen} size={20} />
+            <BellumText type="h2">Available Resources</BellumText>
+          </HStack>
+          
+          <Center>
+            {/* Using the composite component */}
+            <BellumFileBox 
+              title="Key performance" 
+              fileSize="52mb" 
             />
+          </Center>
+        </Box>
+
+        <BellumLine thickness={1} />
+
+        {/* Profile Setup */}
+        <Box width="100%">
+          <HStack gap="2" mb="4">
+            <BellumIcon icon={User} size={20} />
+            <BellumText type="h2">Profile Setup</BellumText>
           </HStack>
           
           <VStack gap="4" align="stretch">
@@ -78,6 +86,7 @@ function App() {
 
         <BellumLine thickness={1} />
 
+        {/* Notification Preferences */}
         <Box width="100%">
           <HStack gap="2" mb="3">
             <BellumIcon icon={Bell} size={20} />
